@@ -1,0 +1,14 @@
+.vh-100 {
+    height: 100vh;
+}
+
+.bg-image {
+    background-image: url('https://www.aerocontact.com/actualite-aeronautique-spatiale/images/AERO20200511161500.jpg');
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.card {
+    border-radius: 15px;
+}
