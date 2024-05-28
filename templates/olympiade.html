@@ -1,30 +1,8 @@
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Olympiades</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css')}}">
-    </head>
-
+<!DOCTYPE html>
+<html lang="fr">
+    {% include 'head.html' %}
     <body>
-        <nav class="navbar bg-dark navbar-dark navbar-expand-md">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="#">
-                Olympiades IENAC APPR
-              </a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto ml-2">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Liste des promos</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
+        {% include 'navbar.html' %}
         <div class="header-image" >
             <h1>Les Olympiades des IENAC APPR</h1>
         </div>
