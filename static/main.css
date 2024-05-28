@@ -1,5 +1,5 @@
 .header-image {
-    background-image: url("promo23.jpeg");
+    background-image: url("images/promo23.jpeg");
     background-size: cover; /* Pour couvrir toute la largeur de la div */
     background-repeat: no-repeat; /* Pour éviter la répétition de l'image */
     background-position: center center; /* Pour centrer l'image */
