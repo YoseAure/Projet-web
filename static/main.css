@@ -1,0 +1,19 @@
+.header-image {
+    background-image: url("images/promo23.jpeg");
+    background-size: cover; /* Pour couvrir toute la largeur de la div */
+    background-repeat: no-repeat; /* Pour éviter la répétition de l'image */
+    background-position: center center; /* Pour centrer l'image */
+    width: 100%; /* Largeur de la div */
+    height: 400px; /* Hauteur de la div, ajustez selon vos besoins */
+    color: white; /* Couleur du texte */
+    text-align: center; /* Alignement du texte */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}

@@ -23,5 +23,10 @@ def account():
 def promotions():
     return render_template('promotions.html', title='Promotions')
 
+@app.route('/olympiades')
+def olympiade():
+    return render_template("olympiade.html")
+
 if __name__ == '__main__':
     app.run(debug=True)
+
