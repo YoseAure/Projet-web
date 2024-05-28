@@ -25,7 +25,7 @@ def promotions():
 
 @app.route('/olympiades')
 def olympiade():
-    return render_template("olympiade.html")
+    return render_template("olympiade.html", title="Olympiades")
 
 if __name__ == '__main__':
     app.run(debug=True)
