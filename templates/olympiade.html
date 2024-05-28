@@ -3,7 +3,7 @@
     {% include 'head.html' %}
     <body>
         {% include 'navbar.html' %}
-        <div class="header-image" >
+        <div class="header-image">
             <h1>Les Olympiades des IENAC APPR</h1>
         </div>
     </br>  
@@ -15,5 +15,85 @@
                 Une équipe est sacré vainqueur à la fin de ces Olympiades et des récompenses sont attribués à nos chers participants.
             </p>
         </div>
+      </br>
+
+      <!-- Carousel -->
+
+        <div class="container">
+          <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="{{ url_for('static', filename='images/photo-balle-priso.jpg') }}" class="d-block w-100" alt="photo balle au prisonnier">
+              </div>
+              <div class="carousel-item">
+                <img src="{{ url_for('static', filename='images/photo-béret.jpg')}}" class="d-block w-100" alt="photo béret">
+              </div>
+              <div class="carousel-item">
+                <img src="{{ url_for('static', filename='images/photo-balle-priso2.jpg') }}" class="d-block w-100" alt="photo balle au prisonnier">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+      </br>
+  
+      <!-- Tableau résultats -->
+
+      <div class="container">
+      <h3 class="text-start">Resultats IENAC APPR 23</h3>
+        <table class="table table-bordered mt-2">
+          <thead class="table-light">
+            <tr class="text-center">
+              <th scope="col">Equipe</th>
+              <th scope="col">Points Beach-Volley</th>
+              <th scope="col">Points Béret</th>
+              <th scope="col">Points Balle au prisonnier</th>
+              <th scope="col">Relais</th>
+              <th scope="col">Classement</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            <tr class="text-center">
+              <th scope="row">1</th>
+              <td>/</td>
+              <td>0</td>
+              <td>2</td>
+              <td>/</td>
+              <td>/</td>
+            </tr>
+            <tr class="text-center">
+              <th scope="row">2</th>
+              <td>/</td>
+              <td>0</td>
+              <td>2</td>
+              <td>/</td>
+              <td>/</td>
+            </tr>
+            <tr class="text-center">
+              <th scope="row">3</th>
+              <td>/</td>
+              <td>2</td>
+              <td>0</td>
+              <td>/</td>
+              <td>/</td>
+            </tr>
+            <tr class="text-center">
+              <th scope="row">4</th>
+              <td>/</td>
+              <td>2</td>
+              <td>0</td>
+              <td>/</td>
+              <td>/</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </body> 
 </html>
