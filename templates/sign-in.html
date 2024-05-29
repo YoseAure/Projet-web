@@ -39,8 +39,30 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="mot-de-passe" class="form-label">Mot de passe</label>
-                                        <input name="mot-de-passe" type="password" class="form-control" id="mot-de-passe" required>
+                                        <div class="input-group">
+                                            <input name="mot-de-passe" type="password" class="form-control" id="mot-de-passe" required>
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-password">Afficher</button>
+                                        </div>
                                     </div>
+                                    
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            var toggleButton = document.getElementById('toggle-password');
+                                            var passwordInput = document.getElementById('mot-de-passe');
+                                    
+                                            if (toggleButton && passwordInput) {
+                                                toggleButton.addEventListener('click', function() {
+                                                    if (passwordInput.type === 'password') {
+                                                        passwordInput.type = 'text';
+                                                        toggleButton.textContent = 'Masquer';
+                                                    } else {
+                                                        passwordInput.type = 'password';
+                                                        toggleButton.textContent = 'Afficher';
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    </script>
                                     <div class="text-center">
                                         <button type="submit" class="btn btn-primary">Se connecter</button>
                                     </div>
