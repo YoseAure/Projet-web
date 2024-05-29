@@ -1,5 +1,5 @@
 .header-home-image {
-    background-image: url("ecole-nationale-de-laviation-civile-a-Montpellier-2.jpg");
+    background-image: url("../images/Ecole-Nationale-de-lAviation-Civile-a-Montpellier-2.jpg");
     background-size: cover; /* Pour couvrir toute la largeur de la div */
     background-repeat: no-repeat; /* Pour éviter la répétition de l'image */
     background-position: center center; /* Pour centrer l'image */
@@ -48,3 +48,13 @@
 .search-bar button {
     align-self: flex-end; /* Align the button to the end */
 }
+
+.custom-carousel {
+    max-width: 1000px; /* Ajustez cette valeur pour définir la largeur souhaitée */
+    margin: 0 auto; /* Centrer le carousel horizontalement */
+  }
+
+  .custom-carousel .carousel-inner img {
+    height: 500px; /* Ajustez cette valeur pour définir la hauteur souhaitée */
+    object-fit: cover; /* Assure que l'image couvre toute la zone définie sans distorsion */
+  }
