@@ -19,7 +19,7 @@ body, html {
 }
 
 .header-home-image {
-    background-image: url("images/ingenieur_enac_2_0.jpg");
+    background-image: url("images/Ecole-Nationale-de-lAviation-Civile-a-Montpellier-2.jpg");
     background-size: cover; /* Pour couvrir toute la largeur de la div */
     background-repeat: no-repeat; /* Pour éviter la répétition de l'image */
     background-position: center center; /* Pour centrer l'image */
