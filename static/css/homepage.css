@@ -1,0 +1,50 @@
+.header-home-image {
+    background-image: url("images/Ecole-Nationale-de-lAviation-Civile-a-Montpellier-2.jpg");
+    background-size: cover; /* Pour couvrir toute la largeur de la div */
+    background-repeat: no-repeat; /* Pour éviter la répétition de l'image */
+    background-position: center center; /* Pour centrer l'image */
+    width: 100%; /* Largeur de la div */
+    height: 400px; /* Hauteur de la div, ajustez selon vos besoins */
+    color: white; /* Couleur du texte */
+    text-align: center; /* Alignement du texte */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.white-text {
+    color: rgb(255, 255, 255);
+}
+.bg-primary-subtle {
+    background-color: #4f7baa; /* A subtle blue background color */
+}
+
+.blue-text {
+    color: rgb(124, 133, 204);
+}
+.bg-primary-subtle {
+    background-color: #4f7baa; /* A subtle blue background color */
+}
+
+.blue-text {
+    color: blue;
+}
+.bg-primary-subtle {
+    background-color: #cce5ff; /* A subtle blue background color */
+}
+.search-bar-container {
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #cce5ff; /* Optional border for better visibility */
+}
+.search-bar {
+    display: flex;
+    gap: 10px; /* Space between input fields */
+}
+.search-bar div {
+    display: flex;
+    flex-direction: column;
+}
+.search-bar button {
+    align-self: flex-end; /* Align the button to the end */
+}
