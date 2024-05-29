@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+    {% include 'head.html' %}
+    <body>
+        {% include 'navbar.html' %}
+        <div class="header-image" >
+            <h1 style="font-size: 80px; text-align: center;">ENAC AWARDS</h1>
+        </div>
+        <div class="row mt-3 mx-2">
+            <div class="col ">
+                <h2 class="text-start">Présentation des ENAC AWARDS</h2>
+            </div>
+            <div class="col-md-auto ">
+            </div>
+
+            <div class="col col-lg-3 ">
+                <div class="row mx-2">
+                    <div class="col">
+                        <div class="input-group">
+                            <select name="annee" class="form-select" id="annee">
+                                <option value="" disabled selected>Sélectionnez une année</option>
+                            </select>
+                            <button class="btn btn-secondary"  type="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                              </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+          <script>
+            var select = document.getElementById("annee");
+            var currentYear = new Date().getFullYear();
+            for (var year = 2024; year <= currentYear; year++) {
+                var previousYear = year - 1;
+                var optionValue = previousYear.toString().slice(-2) + year.toString().slice(-2);
+                var optionText = previousYear.toString() + ' - ' + year.toString();
+                select.add(new Option(optionText, optionValue));}
+        </script> 
+        </div>
+    {% include 'footer.html' %}
+    {% include 'scripts.html' %}
+</body>
+</html>

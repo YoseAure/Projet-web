@@ -27,5 +27,9 @@ def promotions():
 def olympiade():
     return render_template("olympiade.html", title="Olympiades", css_file='olympiades.css')
 
+@app.route('/awards')
+def awards():
+    return render_template("awards.html", title="Awards", css_file='awards.css')
+
 if __name__ == '__main__':
     app.run(debug=True)
