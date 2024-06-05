@@ -1,0 +1,26 @@
+.header-image {
+    background-image: url("../images/a-awards23.jpg");
+    background-size: cover;
+    /* Pour couvrir toute la largeur de la div */
+    background-repeat: no-repeat;
+    /* Pour éviter la répétition de l'image */
+    background-position: center center;
+    /* Pour centrer l'image */
+    width: 100%;
+    /* Largeur de la div */
+    height: 400px;
+    /* Hauteur de la div, ajustez selon vos besoins */
+    color: white;
+    /* Couleur du texte */
+    text-align: center;
+    /* Alignement du texte */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel-inner img {
+    width: 100%; /* L'image occupe toute la largeur disponible */
+    height: 650px; /* Ajustez cette valeur selon vos besoins */
+    object-fit: cover; /* Assure que l'image couvre toute la zone définie sans distorsion */
+}
