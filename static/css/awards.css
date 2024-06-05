@@ -1,0 +1,21 @@
+.header-image {
+    background-image: url("https://t3.ftcdn.net/jpg/05/24/65/66/360_F_524656614_9R1msWLiXVIHnJ4DRzz0hYxKu2mvKQo0.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 100%;
+    height: 400px;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
