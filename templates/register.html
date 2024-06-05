@@ -14,46 +14,37 @@
                             <div class="card-body p-5">
                                 <h2 class="text-uppercase text-center mb-5">Inscription</h2>
                                 <form method="POST">
+                                    {{ form.hidden_tag() }}
                                     <div class="mb-3">
-                                        <label for="nom" class="form-label">Nom</label>
-                                        <input name="nom" type="text" class="form-control" id="nom" required>
+                                        <label for="first_name" class="form-label">Prénom</label>
+                                        {{ form.first_name(class="form-control") }}
                                     </div>
                                     <div class="mb-3">
-                                        <label for="prenom" class="form-label">Prénom</label>
-                                        <input name="prenom" type="text" class="form-control" id="prenom" required>
+                                        <label for="last_name" class="form-label">Nom</label>
+                                        {{ form.last_name(class="form-control") }}
                                     </div>
                                     <div class="mb-3">
-                                        <label for="annee" class="form-label">Sélectionnez votre promotion :</label>
-                                        <select name="annee" class="form-select" id="annee" required>
-                                            <option value="" disabled selected>Choisissez une année</option>
-                                        </select>
-                                    </div>
-                                    <script>
-                                        var select = document.getElementById("annee");
-                                        var currentYear = new Date().getFullYear();
-                                        for (var year = 2013; year <= currentYear; year++) {
-                                            var optionValue = "IENAC" + year.toString().slice(-2) + "_APPR";
-                                            select.add(new Option(optionValue, optionValue));
-                                        }
-                                    </script>
-                                    <div class="mb-3">
-                                        <label for="adresse-mail" class="form-label">Adresse mail</label>
-                                        <input name="adresse-mail" type="email" class="form-control"
-                                            placeholder="@alumni.enac.fr" id="adresse-mail" required>
+                                        <label for="email" class="form-label">Adresse mail</label>
+                                        {{ form.email(class="form-control", placeholder="@alumni.enac.fr") }}
                                     </div>
                                     <div class="mb-3">
-                                        <label for="mot-de-passe" class="form-label">Mot de passe</label>
-                                        <input name="mot-de-passe" type="password" class="form-control" id="mot-de-passe"
-                                            required>
+                                        <label for="password" class="form-label">Mot de passe</label>
+                                        {{ form.password(class="form-control") }}
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirm_password" class="form-label">Confirmez le mot de
+                                            passe</label>
+                                        {{ form.confirm_password(class="form-control") }}
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Suivant</button>
+                                        {{ form.submit(class="btn btn-primary") }}
                                     </div>
                                     <br>
                                     <div class="mb-3 d-flex justify-content-center align-items-center">
-                                        <label for="inscription" class="form-label mb-0">Vous avez déjà un compte ?</label>
+                                        <label for="inscription" class="form-label mb-0">Vous avez déjà un compte
+                                            ?</label>
                                         <p class="mb-0 ms-2"><a class="link-opacity-100"
-                                                href="{{(url_for('login'))}} ">Connectez-vous</a></p>
+                                                href="{{ url_for('login') }}">Connectez-vous</a></p>
                                     </div>
                                 </form>
                             </div>

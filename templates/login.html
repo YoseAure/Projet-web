@@ -12,27 +12,25 @@
                         <div class="card">
                             <div class="card-body p-5">
                                 <h2 class="text-uppercase text-center mb-5">Connexion</h2>
-                                <form method="POST">
+                                <form method="POST" action="{{ url_for('login') }}">
+                                    {{ form.hidden_tag() }}
                                     <div class="mb-3">
-                                        <label for="adresse-mail" class="form-label">Adresse mail</label>
-                                        <input name="adresse-mail" type="email" class="form-control"
-                                            placeholder="@alumni.enac.fr" id="adresse-mail" required>
+                                        {{ form.email.label(class="form-label") }}
+                                        {{ form.email(class="form-control", placeholder="@alumni.enac.fr") }}
                                     </div>
                                     <div class="mb-3">
-                                        <label for="mot-de-passe" class="form-label">Mot de passe</label>
-                                        <input name="mot-de-passe" type="password" class="form-control"
-                                            id="mot-de-passe" required>
+                                        {{ form.password.label(class="form-label") }}
+                                        {{ form.password(class="form-control") }}
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary">Se connecter</button>
+                                        {{ form.submit(class="btn btn-primary") }}
                                     </div>
                                     <br>
                                     <div class="mb-3 d-flex justify-content-center align-items-center">
-                                        <label for="inscription" class="form-label mb-0">Vous n'avez pas de compte
-                                            ?</label>
+                                        <label for="inscription" class="form-label mb-0">Vous n'avez pas de
+                                            compte?</label>
                                         <p class="mb-0 ms-2"><a class="link-opacity-100"
-                                                href="{{url_for('register')}}">Inscrivez-vous</a>
-                                        </p>
+                                                href="{{ url_for('register') }}">Inscrivez-vous</a></p>
                                     </div>
                                 </form>
                             </div>
