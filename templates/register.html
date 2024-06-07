@@ -23,19 +23,80 @@
                                         <label for="last_name" class="form-label">Nom</label>
                                         {{ form.last_name(class="form-control") }}
                                     </div>
+
+                                    <div class="mb-3">
+                                        <label for="annee" class="form-label">Sélectionnez votre promotion :</label>
+                                        <select name="annee" class="form-select" id="annee" required>
+                                            <option value="" disabled selected>-</option>
+                                        </select>
+                                    </div>
+                                    <script>
+                                        var select = document.getElementById("annee");
+                                        var currentYear = new Date().getFullYear();
+                                        for (var year = 2013; year <= currentYear; year++) {
+                                            var optionValue = "IENAC" + year.toString().slice(-2) + "_APPR";
+                                            select.add(new Option(optionValue, optionValue));
+                                        }
+                                    </script>
+
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Adresse mail</label>
                                         {{ form.email(class="form-control", placeholder="@alumni.enac.fr") }}
                                     </div>
+
                                     <div class="mb-3">
-                                        <label for="password" class="form-label">Mot de passe</label>
-                                        {{ form.password(class="form-control") }}
+                                        <label for="password" class="form-label" >Mot de passe</label>
+                                        <div class="input-group">
+                                            {{ form.password(class="form-control", id="mot-de-passe") }} 
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-password">Afficher</button>
+                                        </div>
+                                        
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var toggleButton = document.getElementById('toggle-password');
+                                                var passwordInput = document.getElementById('mot-de-passe');
+                                        
+                                                if (toggleButton && passwordInput) {
+                                                    toggleButton.addEventListener('click', function() {
+                                                        if (passwordInput.type === 'password') {
+                                                            passwordInput.type = 'text';
+                                                            toggleButton.textContent = 'Masquer';
+                                                        } else {
+                                                            passwordInput.type = 'password';
+                                                            toggleButton.textContent = 'Afficher';
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        </script>
                                     </div>
+
                                     <div class="mb-3">
-                                        <label for="confirm_password" class="form-label">Confirmez le mot de
-                                            passe</label>
-                                        {{ form.confirm_password(class="form-control") }}
+                                        <label for="confirm_password" class="form-label">Confirmez le mot de passe</label>
+                                        <div class="input-group">
+                                            {{ form.confirm_password(class="form-control", id = "confirm-mdp") }}
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-conf-password">Afficher</button>
+                                        </div>
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var toggleButton = document.getElementById('toggle-conf-password');
+                                                var passwordInput = document.getElementById('confirm-mdp');
+                                        
+                                                if (toggleButton && passwordInput) {
+                                                    toggleButton.addEventListener('click', function() {
+                                                        if (passwordInput.type === 'password') {
+                                                            passwordInput.type = 'text';
+                                                            toggleButton.textContent = 'Masquer';
+                                                        } else {
+                                                            passwordInput.type = 'password';
+                                                            toggleButton.textContent = 'Afficher';
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        </script>
                                     </div>
+
                                     <div class="text-center">
                                         {{ form.submit(class="btn btn-primary") }}
                                     </div>

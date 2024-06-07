@@ -18,10 +18,43 @@
                                         {{ form.email.label(class="form-label") }}
                                         {{ form.email(class="form-control", placeholder="@alumni.enac.fr") }}
                                     </div>
+
+
+
+
                                     <div class="mb-3">
                                         {{ form.password.label(class="form-label") }}
-                                        {{ form.password(class="form-control") }}
+                                        <div class="input-group">
+                                            {{ form.password(class="form-control", id="mot-de-passe") }} 
+                                            <button class="btn btn-outline-secondary" type="button" id="toggle-password">Afficher</button>
+                                        </div>
                                     </div>
+   
+                                        <script>
+                                            document.addEventListener('DOMContentLoaded', function() {
+                                                var toggleButton = document.getElementById('toggle-password');
+                                                var passwordInput = document.getElementById('mot-de-passe');
+                                        
+                                                if (toggleButton && passwordInput) {
+                                                    toggleButton.addEventListener('click', function() {
+                                                        if (passwordInput.type === 'password') {
+                                                            passwordInput.type = 'text';
+                                                            toggleButton.textContent = 'Masquer';
+                                                        } else {
+                                                            passwordInput.type = 'password';
+                                                            toggleButton.textContent = 'Afficher';
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+
+                                    
+
+
+
+
                                     <div class="text-center">
                                         {{ form.submit(class="btn btn-primary") }}
                                     </div>
