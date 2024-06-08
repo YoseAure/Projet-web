@@ -5,30 +5,30 @@ import email_validator
 
 
 class RegistrationForm(FlaskForm):
-    first_name = StringField('First Name', validators=[
+    first_name = StringField('Prénom', validators=[
                              DataRequired(), Length(min=2, max=30)])
-    last_name = StringField('Last Name', validators=[
+    last_name = StringField('Nom', validators=[
                             DataRequired(), Length(min=2, max=30)])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[
+    password = PasswordField('Mot de passe', validators=[
                              DataRequired(), Length(min=6)])
-    confirm_password = PasswordField('Confirm Password', validators=[
-                                     DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
+    confirm_password = PasswordField('Confirmer mot de passe', validators=[
+                                     DataRequired(), EqualTo('Mot de passe')])
+    submit = SubmitField('Créer mon compte')
 
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Mot de passe', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
-    submit = SubmitField('Login')
+    submit = SubmitField('connexion')
 
 class EditProfileForm(FlaskForm):
-    phone = StringField('Phone', validators=[Length(min=0, max=20)])
-    address = StringField('Address', validators=[Length(min=0, max=255)])
-    company = StringField('Company', validators=[Length(min=0, max=255)])
+    phone = StringField('Téléphone', validators=[Length(min=0, max=20)])
+    address = StringField('Addresse', validators=[Length(min=0, max=255)])
+    company = StringField('Entreprise', validators=[Length(min=0, max=255)])
     twitter = StringField('Twitter', validators=[Length(min=0, max=255)])
     instagram = StringField('Instagram', validators=[Length(min=0, max=255)])
     facebook = StringField('Facebook', validators=[Length(min=0, max=255)])
     github = StringField('Github', validators=[Length(min=0, max=255)])
-    submit = SubmitField('Save Changes')
+    submit = SubmitField('Sauvegarder')
