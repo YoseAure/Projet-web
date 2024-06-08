@@ -22,7 +22,7 @@ login_manager.login_message_category = 'info'
 
 
 class User(UserMixin):
-    def __init__(self, id, first_name, last_name, email, password, promotion_id=None, phone=None, address=None, company=None, twitter=None, instagram=None, facebook=None, github=None):
+    def __init__(self, id, first_name, last_name, email, password, promotion_id=None, phone=None, address=None, company=None, twitter=None, instagram=None, facebook=None, github=None, promotion_name=None, promotion_year=None):
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
@@ -36,23 +36,19 @@ class User(UserMixin):
         self.instagram = instagram
         self.facebook = facebook
         self.github = github
+        self.promotion_name = promotion_name
+        self.promotion_year = promotion_year
 
 
 @login_manager.user_loader
 def load_user(user_id):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
+    cur.execute("SELECT u.*, p.name, p.year FROM Users u LEFT JOIN Promotions p ON u.promotion_id = p.promotion_id WHERE u.user_id = %s", (user_id,))
     user = cur.fetchone()
     cur.close()
     if user:
-        return User(user[0], user[1], user[2], user[3], user[4])
+        return User(user[0], user[1], user[2], user[3], user[4], user[5])
     return None
-
-
-@app.route('/')
-@app.route('/home')
-def homepage():
-    return render_template('homepage.html', title='Homepage', css_file='homepage.css')
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -64,18 +60,24 @@ def login():
         email = form.email.data
         password = form.password.data
         cur = mysql.connection.cursor()
-        cur.execute("SELECT * FROM Users WHERE email = %s", [email])
+        cur.execute("SELECT u.*, p.name, p.year FROM Users u LEFT JOIN Promotions p ON u.promotion_id = p.promotion_id WHERE u.email = %s", [email])
         user = cur.fetchone()
         cur.close()
         if user and bcrypt.check_password_hash(user[4], password):
-            user_obj = User(id=user[0], first_name=user[1],
-                            last_name=user[2], email=user[3], password=user[4])
+            user_obj = User(id=user[0], first_name=user[1], last_name=user[2], email=user[3], password=user[4], promotion_id=user[5])
             login_user(user_obj)
             flash('Logged in successfully.', 'success')
             return redirect(url_for('account'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', css_file='login.css', form=form)
+
+
+
+@app.route('/')
+@app.route('/home')
+def homepage():
+    return render_template('homepage.html', title='Homepage', css_file='homepage.css')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -185,9 +187,18 @@ def edit_profile():
 
 
 @app.route('/promotions')
+@login_required
 def promotions():
     promotions = Promotion.get_all_promotions(mysql)
-    return render_template('promotions.html', title='Promotions', css_file='promotions.css', promotions=promotions)
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT p.name, p.year FROM Promotions p JOIN Users u ON u.promotion_id = p.promotion_id WHERE u.user_id = %s", (current_user.id,))
+    promotion = cur.fetchone()
+    cur.close()
+
+    promotion_name = promotion[0] if promotion else "No promotion assigned"
+    promotion_year = promotion[1] if promotion else "N/A"
+
+    return render_template('promotions.html', title='Promotions', css_file='promotions.css', promotions=promotions, promotion_name=promotion_name, promotion_year=promotion_year)
 
 
 @app.route('/olympiades')
