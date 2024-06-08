@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+{% include 'head.html' %}
+
+<body>
+    {% include 'navbar.html' %}
+    <div class="container mt-5">
+        <div class="row clearfix">
+            <div class="col-lg-4">
+                <div class="card chat-app">
+                    <div id="plist" class="people-list">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Rechercher...">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                </svg>
+                            </button>
+                        </div>
+                        <ul class="list-unstyled chat-list mt-2 mb-0">
+                            {% for user in users %}
+                            <li class="clearfix {% if other_user_id and other_user_id == user[0] %}active{% endif %}">
+                                <img src="{{ url_for('static', filename='images/avatar-homme.png') }}" alt="user" class="rounded-circle" width="30">
+                                <a class="button list-group-item" href="{{ url_for('messages', user_id=user[0]) }}">
+                                    <div class="about">
+                                        <div class="name">{{ user[1] }} {{ user[2] }}</div>
+                                    </div>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card chat">
+                    <div class="chat-header clearfix">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="chat-about d-flex align-items-center">
+                                    {% if other_user %}
+                                    <a href="{{ url_for('account') }}">
+                                        <img src="{{ url_for('static', filename='images/avatar-homme.png') }}" alt="user" class="rounded-circle" width="30">
+                                    </a>
+                                    <h6 class="m-b-0 correspondent-name">{{ other_user[1] }} {{ other_user[2] }}</h6>
+                                    {% else %}
+                                    <h6 class="m-b-0">Sélectionnez un utilisateur pour commencer une discussion</h6>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-lg-6 hidden-sm text-end">
+                                <a href="javascript:void(0);" class="btn btn-outline-secondary">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                        class="bi bi-file-earmark-arrow-up" viewBox="0 0 16 16">
+                                        <path
+                                            d="M8.5 11.5a.5.5 0 0 1-1 0V7.707L6.354 8.854a.5.5 0 1 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 7.707z" />
+                                        <path
+                                            d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-history">
+                        <ul class="list-unstyled">
+                            {% for message in messages %}
+                            <li
+                                class="clearfix {% if message[0] == current_user_id %}text-end{% else %}text-start{% endif %}">
+                                <div
+                                    class="message-data {% if message[0] == current_user_id %}text-end{% else %}text-start{% endif %}">
+                                    <span class="message-data-time">{{ message[4] }} {{ message[5] }} à {{ message[3]
+                                        }}</span>
+                                </div>
+                                <div
+                                    class="message {% if message[0] == current_user_id %}my-message{% else %}other-message{% endif %}">
+                                    {{ message[2] }}
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="chat-message clearfix">
+                        <form action="{{ url_for('send_message') }}" method="POST">
+                            <div class="input-group mb-0">
+                                <input type="hidden" name="receiver_id" value="{{ other_user_id }}">
+                                <input type="text" name="message" class="form-control"
+                                    placeholder="Écrivez votre message ici...">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-send" viewBox="0 0 16 16">
+                                        <path
+                                            d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+</body>
+
+</html>
