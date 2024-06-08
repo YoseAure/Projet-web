@@ -335,8 +335,16 @@ def awards():
     return render_template("awards.html", title="Awards", css_file='awards.css')
 
 @app.route('/awards23')
+@login_required
 def awards23():
     return render_template("awards23.html", title="Awards 2023", css_file='awards23.css')
+
+
+@app.route('/index')
+@login_required
+def index():
+    return render_template("index.html", title="test tempkate", css_file='carousel.css')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
