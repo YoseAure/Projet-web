@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_mysqldb import MySQL
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user, login_required
@@ -239,6 +239,78 @@ def profile(user_id):
     cur.close()
 
     return render_template('profile.html', user=user, following=following, followers=followers)
+
+
+@app.route('/send_message', methods=['POST'])
+@login_required
+def send_message():
+    receiver_id = request.form.get('receiver_id')
+    message_content = request.form.get('message')
+
+    if receiver_id and message_content:
+        cur = mysql.connection.cursor()
+        cur.execute(
+            "INSERT INTO Messages (sender_id, receiver_id, message) VALUES (%s, %s, %s)",
+            (current_user.id, receiver_id, message_content)
+        )
+        mysql.connection.commit()
+        cur.close()
+
+    return redirect(url_for('messages', user_id=receiver_id))
+
+
+@app.route('/old-messages')
+@login_required
+def old_messages():
+    return render_template('old-messages.html', css_file="messages.css", title='old messages')
+
+
+@app.route('/messages')
+@login_required
+def messages():
+    user_id = current_user.id
+
+    cur = mysql.connection.cursor()
+    cur.execute(
+        "SELECT user_id, first_name, last_name FROM Users WHERE user_id != %s", (user_id,))
+    users = cur.fetchall()
+    cur.close()
+
+    other_user_id = request.args.get('user_id')
+    messages = []
+    other_user = None
+    if other_user_id:
+        cur = mysql.connection.cursor()
+
+        # Récupérer les messages
+        cur.execute("""
+            SELECT m.sender_id, m.receiver_id, m.message, m.timestamp, u.first_name, u.last_name
+            FROM Messages m
+            JOIN Users u ON m.sender_id = u.user_id
+            WHERE (m.sender_id = %s AND m.receiver_id = %s)
+               OR (m.sender_id = %s AND m.receiver_id = %s)
+            ORDER BY m.timestamp ASC
+        """, (user_id, other_user_id, other_user_id, user_id))
+        messages = cur.fetchall()
+
+        # Récupérer les informations de l'autre utilisateur
+        cur.execute(
+            "SELECT user_id, first_name, last_name FROM Users WHERE user_id = %s", (other_user_id,))
+        other_user = cur.fetchone()
+
+        cur.close()
+
+    return render_template(
+        'messages.html',
+        title='Messages',
+        users=users,
+        messages=messages,
+        current_user_id=user_id,
+        other_user_id=other_user_id,
+        other_user=other_user,
+        css_file='messages.css'
+    )
+
 
 
 @app.route('/logout')
