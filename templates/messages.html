@@ -36,18 +36,15 @@
             </div>
             <div class="col-lg-8">
                 <div class="card chat">
+                    {% if other_user %}
                     <div class="chat-header clearfix">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="chat-about d-flex align-items-center">
-                                    {% if other_user %}
                                     <a href="{{ url_for('account') }}">
                                         <img src="{{ url_for('static', filename='images/avatar-homme.png') }}" alt="user" class="rounded-circle" width="30">
                                     </a>
                                     <h6 class="m-b-0 correspondent-name">{{ other_user[1] }} {{ other_user[2] }}</h6>
-                                    {% else %}
-                                    <h6 class="m-b-0">Sélectionnez un utilisateur pour commencer une discussion</h6>
-                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-lg-6 hidden-sm text-end">
@@ -63,25 +60,30 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
 
-                    <div class="chat-history">
-                        <ul class="list-unstyled">
-                            {% for message in messages %}
-                            <li
-                                class="clearfix {% if message[0] == current_user_id %}text-end{% else %}text-start{% endif %}">
-                                <div
-                                    class="message-data {% if message[0] == current_user_id %}text-end{% else %}text-start{% endif %}">
-                                    <span class="message-data-time">{{ message[4] }} {{ message[5] }} à {{ message[3]
-                                        }}</span>
-                                </div>
-                                <div
-                                    class="message {% if message[0] == current_user_id %}my-message{% else %}other-message{% endif %}">
-                                    {{ message[2] }}
-                                </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                    <div class="chat-history-container">
+                        <div class="chat-history overflow-auto" style="height: 500px;">
+                            {% if other_user %}
+                            <ul class="list-unstyled">
+                                {% for message in messages %}
+                                <li class="clearfix {% if message[0] == current_user_id %}text-end{% else %}text-start{% endif %}">
+                                    <div class="message-data {% if message[0] == current_user_id %}text-end{% else %}text-start{% endif %}">
+                                        <span class="message-data-time">{{ message[4] }} {{ message[5] }} à {{ message[3] }}</span>
+                                    </div>
+                                    <div class="message {% if message[0] == current_user_id %}my-message{% else %}other-message{% endif %}">
+                                        {{ message[2] }}
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <h6 class="position-absolute top-50 start-50 translate-middle text-center">Sélectionnez un utilisateur pour ouvrir une discussion</h6>
+                            {% endif %}
+                        </div>
                     </div>
+
+                    {% if other_user %}
                     <div class="chat-message clearfix">
                         <form action="{{ url_for('send_message') }}" method="POST">
                             <div class="input-group mb-0">
@@ -98,6 +100,7 @@
                             </div>
                         </form>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
