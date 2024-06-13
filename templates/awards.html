@@ -4,53 +4,83 @@
     <body>
         {% include 'navbar.html' %}
 
-        <div class="header-image">
-            <h1 style="font-size: 80px; text-align: center;">ENAC AWARDS</h1>
-        </div>
-        
-        <div class="row mt-3 mx-2">
-            <div class="col">
-                <h2 class="text-start">Présentation des ENAC AWARDS</h2>
-            </div>
-            <div class="col-md-auto "></div>
-            <div class="col col-lg-3 ">
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                      Résultats par année
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <li><a class="dropdown-item" href="{{(url_for('awards23'))}}">2023</a></li>
-                    </ul>
-                </div>
-            </div> 
-        </div>
+        <div class="background-image" >
+            <div class="carousel-caption">
+                <h1>ENAC AWARDS</h1><br>
+                
+            </div>  
+        </div> 
+    
+        <br><div class="container marketing">
+            <div class="dropdown d-flex justify-content-end">
+                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Résultats par année
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="#">2022</a></li>
+                    <li><a class="dropdown-item" href="{{(url_for('awards23'))}}">2023</a></li>
+                </ul>
+            </div>            
 
-        <div class="row">
-            <div class="col-8">
-                <p class="text-start mt-2 px-4 py-2">
-                    <strong>Description de l'évènement :</strong><br>
-                    Les ENAC Awards sont des cérémonies uniques organisées chaque année par les apprentis et pour les apprentis. 
+            <hr class="featurette-divider">
+            <div class="row featurette">
+              <div class="col-md-7">
+                <h2 class="featurette-heading fw-normal lh-1">Présentation des ENAC AWARDS</h2><br>
+                <p class="lead">Les ENAC Awards sont des cérémonies uniques organisées chaque année par les apprentis et pour les apprentis. Au cours de cet évènement, des prix sont décernés par les étudiants dans des catégories qu'ils choisissent au préalable.
                     <br><br>
                     Au-delà des cours et de l'entreprise, l'objectif principal de cet évènement est de rassembler les différentes promotions d'apprentis présentes à Montpellier pour que les élèves
-                    se rencontrent, échangent et créent des liens qui dureront bien<br>au-delà de leur formation. Chaque année, la promotion la plus âgée organise la cérémonie, le repas ainsi que la soirée<br>pour la promotion entrante.
-                    <br><br>
-                    Les prix sont décernés par les étudiants dans des catégories qu'ils choisissent au préalable.<br>
-                    Après le vote de chacun, nous saurons par exemple qui est :<br>
-                    - Le / La plus stressé(e),<br> 
-                    - Le / La plus passionné(e) d'aéronautique,<br>
-                    - Le / La meilleur(e) pilote, etc.<br><br>
-                    Cela laisse libre cours à l'imagination, n'est-ce pas ?
-                </p>
-                
-            </div>
+                    se rencontrent, échangent et créent des liens qui dureront bien au-delà de leur formation. <br><br>Chaque année, la promotion la plus âgée organise la cérémonie, le repas ainsi que la soirée pour la promotion entrante.
+                    <br>
+              </div>
 
-            <div class="col-4 px-4 py-2">
+              <div class="col-md-5 d-flex justify-content-center align-items-center">
                 <img src="{{ url_for('static', filename='images/a-invitation.jpg') }}" class="rounded img-fluid img-with-margins" alt="...">
             </div>
-            
-            
-            
         </div>
+
+        <hr class="featurette-divider">
+        <div class="row featurette">
+            <div class="col-md-7 order-md-2" style="text-align: center; display: flex; justify-content: center; align-items: center;">
+                <h2 class="featurette-heading fw-normal lh-1">Une connexion entre apprentis</h2>
+            </div>         
+            <div class="col-md-5 d-flex justify-content-center align-items-center">
+                <img src="{{ url_for('static', filename='images/a-award2.jpg') }}" class="rounded img-fluid img-with-margins" alt="...">
+            </div>
+          </div>
+      
+          <hr class="featurette-divider">
+          <div class="row featurette">
+            <div class="col-md-7 d-flex justify-content-center align-items-center">
+                <h2 class="featurette-heading fw-normal lh-1">Un instant de rire et de joie</h2>
+            </div>
+            <div class="col-md-5 d-flex justify-content-center align-items-center">
+                <img src="{{ url_for('static', filename='images/a-award1.jpg') }}" class="rounded img-fluid img-with-margins" alt="...">
+            </div>
+          </div>
+      
+          <hr class="featurette-divider">
+
+          <div class="row featurette">
+            <div class="col-md-7 order-md-2" style="text-align: center; display: flex; justify-content: center; align-items: center;">
+                <h2 class="featurette-heading fw-normal lh-1">Une soirée de gala inoubliable</h2>
+            </div>         
+            <div class="col-md-5 d-flex justify-content-center align-items-center">
+                <img src="{{ url_for('static', filename='images/a-award3.jpg') }}" class="rounded img-fluid img-with-margins" alt="...">
+            </div>
+          </div>
+          
+          
+          <hr class="featurette-divider">
+          
+          <br>
+
+
+          <div class="row featurette" style="text-align: center;">
+            <p style="width: 100%;">
+                <a class="btn btn-outline-primary" href="https://www.instagram.com/reel/Cz6j0n0tBOa/?igsh=MTFyMjQ0MWQzYWR4YQ%3D%3D" role="button" style="font-size: 20px; display: block; width: 100%;">Voir la vidéo de présentation des ENAC AWARDS</a>
+            </p>
+        </div>
+
 
         {% include 'footer.html' %}
         {% include 'scripts.html' %}

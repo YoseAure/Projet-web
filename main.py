@@ -253,7 +253,19 @@ def awards():
 
 @app.route('/awards23')
 def awards23():
-    return render_template("awards23.html", title="Awards 2023", css_file='awards23.css')
+    cur = mysql.connection.cursor()
+
+    cur.execute("""
+        SELECT a.nomAward, u.first_name, u.last_name, a.idAward, p.name
+        FROM Awards a 
+        INNER JOIN Users u ON a.idGagnant = u.user_id INNER JOIN Promotions p ON p.promotion_id = u.promotion_id
+        WHERE a.idEvenement = 1
+    """)
+    awards = cur.fetchall()
+
+   
+
+    return render_template("awards23.html", title="Awards 2023", css_file='awards23.css', awards=awards)
 
 if __name__ == '__main__':
     app.run(debug=True)
