@@ -123,40 +123,58 @@ def edit_profile():
     if form.validate_on_submit():
         cur = mysql.connection.cursor()
 
-        cur.execute("""
-            INSERT INTO UserDetails (user_id, phone, address, ville, code_postal, pays, company, twitter, instagram, facebook, github)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s ,%s, %s)
-            ON DUPLICATE KEY UPDATE
-                phone = VALUES(phone),
-                address = VALUES(address),
-                ville = VALUES(ville),
-                code_postal = VALUES(code_postal),
-                pays = VALUES(pays),
-                company = VALUES(company),
-                twitter = VALUES(twitter),
-                instagram = VALUES(instagram),
-                facebook = VALUES(facebook),
-                github = VALUES(github)
-        """, (current_user.id, 
-              form.phone.data, 
-              form.address.data, 
-              form.city.data, 
-              form.postal_code.data,
-              form.country.data, 
-              form.company.data, 
-              form.twitter.data, 
-              form.instagram.data, 
-              form.facebook.data, 
-              form.github.data))
+        phone = form.phone.data.strip() or None
+        address = form.address.data.strip() or None
+        city = form.city.data.strip() or None
+        postal_code = form.postal_code.data or None
+        country = form.country.data.strip() or None
+        company = form.company.data.strip() or None
+        twitter = form.twitter.data.strip() or None
+        instagram = form.instagram.data.strip() or None
+        facebook = form.facebook.data.strip() or None
+        github = form.github.data.strip() or None
 
-        mysql.connection.commit()
-        cur.close()
-        flash('Your profile has been updated!', 'success')
-        return redirect(url_for('account'))
+        try:
+            cur.execute("""
+                INSERT INTO UserDetails (user_id, phone, address, ville, code_postal, pays, company, twitter, instagram, facebook, github)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                ON DUPLICATE KEY UPDATE
+                    phone = VALUES(phone),
+                    address = VALUES(address),
+                    ville = VALUES(ville),
+                    code_postal = VALUES(code_postal),
+                    pays = VALUES(pays),
+                    company = VALUES(company),
+                    twitter = VALUES(twitter),
+                    instagram = VALUES(instagram),
+                    facebook = VALUES(facebook),
+                    github = VALUES(github)
+            """, (current_user.id,
+                  phone,
+                  address,
+                  city,
+                  postal_code,
+                  country,
+                  company,
+                  twitter,
+                  instagram,
+                  facebook,
+                  github))
+            mysql.connection.commit()
+            flash('Your profile has been updated!', 'success')
+        except Exception as e:
+            flash(
+                f'Erreur lors de la mise à jour de votre profil : {e}', 'danger')
+            mysql.connection.rollback()
+        finally:
+            cur.close()
+
+        return redirect(url_for('account', user_id=current_user.id))
 
     # Pre-fill form with current data
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM UserDetails WHERE user_id = %s", (current_user.id,))
+    cur.execute("SELECT * FROM UserDetails WHERE user_id = %s",
+                (current_user.id,))
     details = cur.fetchone()
     if details:
         form.phone.data = details[1]
