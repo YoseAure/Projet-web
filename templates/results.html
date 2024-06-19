@@ -1,0 +1,60 @@
+<html lang="fr">
+    {% include 'head.html' %}
+<body>
+    {% include 'navbar.html' %}
+    <div class="container marketing">
+        <div class="container">
+            <h1 class="text-center">Podium des équipes de la promo</h1>
+        </div>
+        <div class="podium">
+            <div class="position second">
+                <img src="{{ url_for('static', filename='images/ienac22.jpeg') }}" class="team-image">
+                <h2>Équipe 2</h2>
+                <p>Score : 85</p>
+            </div>
+            <div class="position first">
+                <img src="{{ url_for('static', filename='images/ienac22.jpeg') }}" class="team-image">
+                <h2>Équipe 1</h2>
+                <p>Score : 95</p>
+            </div>
+            <div class="position third">
+                <img src="{{ url_for('static', filename='images/ienac22.jpeg') }}" class="team-image">
+                <h2>Équipe 3</h2>
+                <p>Score : 75</p>
+            </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <div class="container">
+            <h1 class="text-center">Résultats</h1>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Équipe</th>
+                    <th scope="col">Volley</th>
+                    <th scope="col">Béret</th>
+                    <th scope="col">Relais</th>
+                    <th scope="col">Balle au prisonnier</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for equipe, epreuves in gagner.items() %}
+                    <tr>
+                        <th scope="row">{{ equipe }}</th>
+                        <td class="{{ 'gold' if epreuves.get('Volley') == 'Vainqueur' else 'silver' if epreuves.get('Volley') == 'Perdant' else '' }}">{{ epreuves.get('Volley', 'Pas classé') }}</td>
+                        <td class="{{ 'gold' if epreuves.get('Béret') == 'Vainqueur' else 'silver' if epreuves.get('Béret') == 'Perdant' else '' }}">{{ epreuves.get('Béret', 'Pas classé') }}</td>
+                        <td class="{{ 'gold' if epreuves.get('Relais') == 'Vainqueur' else 'silver' if epreuves.get('Relais') == 'Perdant' else '' }}">{{ epreuves.get('Relais', 'Pas classé') }}</td>
+                        <td class="{{ 'gold' if epreuves.get('Balle au prisonnier') == 'Vainqueur' else 'silver' if epreuves.get('Balle au prisonnier') == 'Perdant' else '' }}">{{ epreuves.get('Balle au prisonnier', 'Pas classé') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="container">
+            <p><a type="button" class="btn btn-outline-Secondary" href="/olympiades">Retour</a></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

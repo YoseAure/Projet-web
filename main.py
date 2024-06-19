@@ -345,6 +345,37 @@ def awards23():
 def index():
     return render_template("index.html", title="test tempkate", css_file='carousel.css')
 
+@app.route('/results')
+@login_required
+def results():
+    cur = mysql.connection.cursor()
+
+    cur.execute("""SELECT E.Intitule, Q.nom_equipe, G.Statut
+                        FROM Gagner_col G
+                        JOIN Equipe Q ON G.Id_equipe = Q.Id_equipe
+                        JOIN Epreuve E ON G.Id_epreuve = E.Id_epreuve;""")
+    rows = cur.fetchall()
+    cur.close()
+    
+    gagner = {}
+    epreuves = set()
+
+    for row in rows:
+        epreuve = row[0]
+        equipe = row[1]
+        statut = row[2]
+        epreuves.add(epreuve)
+        if equipe not in gagner:
+            gagner[equipe] = {}
+        gagner[equipe][epreuve] = statut
+
+    # Ajouter 'Perdant' pour les épreuves manquantes
+    for equipe in gagner:
+        for epreuve in epreuves:
+            if epreuve not in gagner[equipe]:
+                gagner[equipe][epreuve] = 'Pas classé'
+
+    return render_template("results.html", title="Résultats", css_file='results.css', gagner=gagner)
 
 if __name__ == '__main__':
     app.run(debug=True)
