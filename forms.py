@@ -30,4 +30,5 @@ class EditProfileForm(FlaskForm):
     instagram = StringField('Instagram', validators=[Length(max=255)])
     facebook = StringField('Facebook', validators=[Length(max=255)])
     github = StringField('Github', validators=[Length(max=255)])
+    linkedin = StringField('Linkedin', validators=[Length(max=255)])
     submit = SubmitField('Sauvegarder')

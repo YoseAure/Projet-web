@@ -138,11 +138,12 @@ def edit_profile():
         instagram = form.instagram.data.strip() or None
         facebook = form.facebook.data.strip() or None
         github = form.github.data.strip() or None
+        linkedin = form.linkedin.data.strip() or None
 
         try:
             cur.execute("""
-                INSERT INTO UserDetails (user_id, phone, address, ville, code_postal, pays, company, twitter, instagram, facebook, github)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO UserDetails (user_id, phone, address, ville, code_postal, pays, company, twitter, instagram, facebook, github, linkedin)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 ON DUPLICATE KEY UPDATE
                     phone = VALUES(phone),
                     address = VALUES(address),
@@ -154,6 +155,7 @@ def edit_profile():
                     instagram = VALUES(instagram),
                     facebook = VALUES(facebook),
                     github = VALUES(github)
+                    linkedin = VALUES(linkedin)
             """, (current_user.id,
                   phone,
                   address,
@@ -164,7 +166,8 @@ def edit_profile():
                   twitter,
                   instagram,
                   facebook,
-                  github))
+                  github,
+                  linkedin))
             mysql.connection.commit()
             flash('Your profile has been updated!', 'success')
         except Exception as e:
@@ -191,6 +194,7 @@ def edit_profile():
         form.instagram.data = details[8]
         form.facebook.data = details[9]
         form.github.data = details[10]
+        form.linkedin.data = details[11]
     cur.close()
 
     return render_template('edit-profile.html', title='Edit Profile', css_file='edit-profile.css', form=form)
