@@ -5,7 +5,17 @@
 <body>
     {% include 'navbar.html' %}
     <div class="container mt-5">
-        <h2>Edit Profile</h2>
+        <div class="mb-3">
+            <a href="{{ url_for('account') }}" class="btn btn-outline-secondary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z" />
+                </svg>
+                Retour
+            </a>
+        </div>
+        <h2>Mofifiez votre profil</h2>
         <form method="POST" action="">
             {{ form.hidden_tag() }}
             <div class="mb-3">
@@ -13,6 +23,15 @@
             </div>
             <div class="mb-3">
                 {{ form.address.label }} {{ form.address(size=32, class_='form-control') }}
+            </div>
+            <div class="mb-3">
+                {{ form.city.label }} {{ form.city(size=32, class_='form-control') }}
+            </div>
+            <div class="mb-3">
+                {{ form.postal_code.label }} {{ form.postal_code(size=32, class_='form-control') }}
+            </div>
+            <div class="mb-3">
+                {{ form.country.label }} {{ form.country(size=32, class_='form-control') }}
             </div>
             <div class="mb-3">
                 {{ form.company.label }} {{ form.company(size=32, class_='form-control') }}
@@ -31,6 +50,7 @@
             </div>
             <div class="mb-3">
                 {{ form.submit(class_='btn btn-primary') }}
+                <a href="{{ url_for('account') }}" class="btn btn-outline-secondary">Annuler</a>
             </div>
         </form>
     </div>
