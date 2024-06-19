@@ -15,8 +15,8 @@
                                     class="rounded-circle" width="150">
                                 <div class="mt-3">
                                     <h4>{{prenom + " " + nom}} </h4>
-                                    <p class="text-secondary mb-1">Apprenti Ingénieur ENAC chez Safran</p>
-                                    <p class="text-muted font-size-sm">Paris, France</p>
+                                    <p class="text-secondary mb-1"> {{ company }} </p>
+                                    <p class="text-muted font-size-sm">{% if code_postal %}{{ code_postal }}{% endif %}{% if ville %}, {{ ville }}{% endif %}{% if pays %}, {{ pays }}{% endif %}</p>
                                     <button class="btn btn-primary">Suivre</button>
                                     <a class="btn btn-outline-primary" href="{{url_for('messages')}}">Message</a>
                                 </div>
@@ -131,7 +131,7 @@
                                     <h6 class="mb-0">Adresse</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    {{address}}
+                                    {{address}}{% if code_postal %}, {{ code_postal }}{% endif %}{% if ville %}, {{ville}}{% endif %}{% if pays %}, {{pays}}{% endif %}
                                 </div>
                             </div>
                             <hr>

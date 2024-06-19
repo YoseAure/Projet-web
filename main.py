@@ -111,36 +111,36 @@ def account():
 
     cur = mysql.connection.cursor()
     cur.execute(
-        "SELECT phone, address, company FROM UserDetails WHERE user_id = %s", (current_user.id,))
+        "SELECT * FROM UserDetails WHERE user_id = %s", (current_user.id,))
     details = cur.fetchone()
-    phone = details[0] if details and details[0] else ''
-    address = details[1] if details and details[1] else ''
-    company = details[2] if details and details[2] else ''
-    cur.close()
-
-    cur = mysql.connection.cursor()
-    cur.execute(
-        "SELECT twitter, instagram, facebook, github FROM UserDetails WHERE user_id = %s", (current_user.id,))
-    social_links = cur.fetchone()
-    twitter = social_links[0] if social_links and social_links[0] else ''
-    instagram = social_links[1] if social_links and social_links[1] else ''
-    facebook = social_links[2] if social_links and social_links[2] else ''
-    github = social_links[3] if social_links and social_links[3] else ''
+    phone = details[1] if details and details[1] else ''
+    address = details[2] if details and details[2] else ''
+    ville = details[3] if details and details[3] else ''
+    code_postal = details[4] if details and details[4] else None
+    pays = details[5] if details and details[5] else ''
+    company = details[6] if details and details[6] else ''
+    twitter = details[7] if details and details[7] else ''
+    instagram = details[8] if details and details[8] else ''
+    facebook = details[9] if details and details[9] else ''
+    github = details[10] if details and details[10] else ''
     cur.close()
 
     return render_template('account.html',
-                           title='Account Profile',
-                           css_file='account.css',
-                           nom=nom,
-                           prenom=prenom,
-                           email=email,
-                           phone=phone,
-                           address=address,
-                           company=company,
-                           twitter=twitter,
-                           instagram=instagram,
-                           facebook=facebook,
-                           github=github)
+                            title='Account Profile',
+                            css_file='account.css',
+                            nom=nom,
+                            prenom=prenom,
+                            email=email,
+                            phone=phone,
+                            address=address,
+                            ville=ville,
+                            code_postal=code_postal,
+                            pays=pays,
+                            company=company,
+                            twitter=twitter,
+                            instagram=instagram,
+                            facebook=facebook,
+                            github=github)
 
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
@@ -151,17 +151,30 @@ def edit_profile():
         cur = mysql.connection.cursor()
 
         cur.execute("""
-            INSERT INTO UserDetails (user_id, phone, address, company, twitter, instagram, facebook, github)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO UserDetails (user_id, phone, address, ville, code_postal, pays, company, twitter, instagram, facebook, github)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s ,%s, %s)
             ON DUPLICATE KEY UPDATE
                 phone = VALUES(phone),
                 address = VALUES(address),
+                ville = VALUES(ville),
+                code_postal = VALUES(code_postal),
+                pays = VALUES(pays),
                 company = VALUES(company),
                 twitter = VALUES(twitter),
                 instagram = VALUES(instagram),
                 facebook = VALUES(facebook),
                 github = VALUES(github)
-        """, (current_user.id, form.phone.data, form.address.data, form.company.data, form.twitter.data, form.instagram.data, form.facebook.data, form.github.data))
+        """, (current_user.id, 
+              form.phone.data, 
+              form.address.data, 
+              form.city.data, 
+              form.postal_code.data,
+              form.country.data, 
+              form.company.data, 
+              form.twitter.data, 
+              form.instagram.data, 
+              form.facebook.data, 
+              form.github.data))
 
         mysql.connection.commit()
         cur.close()
@@ -170,17 +183,19 @@ def edit_profile():
 
     # Pre-fill form with current data
     cur = mysql.connection.cursor()
-    cur.execute("SELECT phone, address, company, twitter, instagram, facebook, github FROM UserDetails WHERE user_id = %s", (current_user.id,))
+    cur.execute("SELECT * FROM UserDetails WHERE user_id = %s", (current_user.id,))
     details = cur.fetchone()
     if details:
-        form.phone.data = details[0]
-        form.address.data = details[1]
-        form.company.data = details[2]
-        form.twitter.data = details[3]
-        form.instagram.data = details[4]
-        form.facebook.data = details[5]
-        form.github.data = details[6]
-
+        form.phone.data = details[1]
+        form.address.data = details[2]
+        form.city.data = details[3]
+        form.postal_code.data = details[4]
+        form.country.data = details[5]
+        form.company.data = details[6]
+        form.twitter.data = details[7]
+        form.instagram.data = details[8]
+        form.facebook.data = details[9]
+        form.github.data = details[10]
     cur.close()
 
     return render_template('edit-profile.html', title='Edit Profile', css_file='edit-profile.css', form=form)
