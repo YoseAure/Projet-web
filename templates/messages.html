@@ -19,7 +19,7 @@
                                 </svg>
                             </button>
                         </div>
-                        <ul class="list-unstyled chat-list mt-2 mb-0">
+                        <ul class="list-unstyled chat-list mt-2 mb-0 overflow-auto" style="height: 500px;"">
                             {% for user in users %}
                             <li class="clearfix {% if other_user_id and other_user_id == user[0] %}active{% endif %}">
                                 <img src="{{ url_for('static', filename='images/avatar-homme.png') }}" alt="user" class="rounded-circle" width="30">

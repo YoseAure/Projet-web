@@ -72,11 +72,9 @@ def homepage():
 @app.route('/account/<int:user_id>')
 @login_required
 def account(user_id):
-    # Si aucun user_id n'est fourni, afficher le profil de l'utilisateur actuel
     if user_id is None:
         user_id = current_user.id
 
-    # Obtenir les détails de l'utilisateur à afficher
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
     user = cur.fetchone()
@@ -178,7 +176,6 @@ def edit_profile():
 
         return redirect(url_for('account', user_id=current_user.id))
 
-    # Pre-fill form with current data
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM UserDetails WHERE user_id = %s",
                 (current_user.id,))
@@ -204,7 +201,6 @@ def edit_profile():
 def promotions():
     cur = mysql.connection.cursor()
 
-    # Récupération de toutes les promotions
     cur.execute("""
         SELECT p.promotion_id, p.year, p.name, COUNT(u.user_id) as user_count
         FROM Promotions p
@@ -231,21 +227,6 @@ def promotions():
 
     return render_template('promotions.html', title='Promotions', css_file='promotions.css',
                            promotions=promotions, promotion_name=promotion_name, users=users)
-
-
-# @app.route('/promotions')
-# @login_required
-# def promotions():
-#     promotions = Promotion.get_all_promotions(mysql)
-#     cur = mysql.connection.cursor()
-#     cur.execute("SELECT p.name, p.year FROM Promotions p JOIN Users u ON u.promotion_id = p.promotion_id WHERE u.user_id = %s", (current_user.id,))
-#     promotion = cur.fetchone()
-#     cur.close()
-
-#     promotion_name = promotion[0] if promotion else "No promotion assigned"
-#     promotion_year = promotion[1] if promotion else "N/A"
-
-#     return render_template('promotions.html', title='Promotions', css_file='promotions.css', promotions=promotions, promotion_name=promotion_name, promotion_year=promotion_year)
 
 
 @app.route('/olympiades')
@@ -317,7 +298,6 @@ def messages():
     if other_user_id:
         cur = mysql.connection.cursor()
 
-        # Récupérer les messages
         cur.execute("""
             SELECT m.sender_id, m.receiver_id, m.message, m.timestamp, u.first_name, u.last_name
             FROM Messages m
@@ -328,7 +308,6 @@ def messages():
         """, (user_id, other_user_id, other_user_id, user_id))
         messages = cur.fetchall()
 
-        # Récupérer les informations de l'autre utilisateur
         cur.execute(
             "SELECT user_id, first_name, last_name FROM Users WHERE user_id = %s", (other_user_id,))
         other_user = cur.fetchone()
@@ -355,24 +334,36 @@ def logout():
 
 @app.route('/awards')
 def awards():
-    return render_template("awards.html", title="Awards", css_file='awards.css')
-
-@app.route('/awards23')
-@login_required
-def awards23():
     cur = mysql.connection.cursor()
-
     cur.execute("""
-        SELECT a.nomAward, u.first_name, u.last_name, a.idAward, p.name
+        SELECT a.nomAward, u.first_name, u.last_name, a.idAward, p.name , u.user_id
         FROM Awards a 
         INNER JOIN Users u ON a.idGagnant = u.user_id INNER JOIN Promotions p ON p.promotion_id = u.promotion_id
         WHERE a.idEvenement = 1
     """)
     awards = cur.fetchall()
 
-   
+    cur.execute("""
+        SELECT a.nomAward, u.first_name, u.last_name, a.idAward, p.name, u.user_id 
+        FROM Awards21 a 
+        INNER JOIN Users u ON a.idGagnant = u.user_id INNER JOIN Promotions p ON p.promotion_id = u.promotion_id
+        WHERE a.idEvenement = 2
+        
+    """)
+    awards21 = cur.fetchall()
+    
 
-    return render_template("awards23.html", title="Awards 2023", css_file='awards23.css', awards=awards)
+    cur.execute("""
+        SELECT a.nomAward, u.first_name, u.last_name, a.idAward, p.name, u.user_id 
+        FROM Awards22 a 
+        INNER JOIN Users u ON a.idGagnant = u.user_id INNER JOIN Promotions p ON p.promotion_id = u.promotion_id
+        WHERE a.idEvenement = 3
+        
+    """)
+    awards22 = cur.fetchall()
+    
+    cur.close()
+    return render_template("awards.html", title="Awards", css_file='awards.css', awards=awards, awards21=awards21, awards22=awards22)
 
 
 @app.route('/results')
@@ -386,7 +377,7 @@ def results():
                         JOIN Epreuve E ON G.Id_epreuve = E.Id_epreuve;""")
     rows = cur.fetchall()
     cur.close()
-    
+
     gagner = {}
     epreuves = set()
 
@@ -399,7 +390,6 @@ def results():
             gagner[equipe] = {}
         gagner[equipe][epreuve] = statut
 
-    # Ajouter 'Perdant' pour les épreuves manquantes
     for equipe in gagner:
         for epreuve in epreuves:
             if epreuve not in gagner[equipe]:
