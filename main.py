@@ -80,13 +80,6 @@ def homepage():
     return render_template('homepage.html', title='Homepage', css_file='homepage.css')
 
 
-@app.route('/oldhomepage')
-@login_required
-def index():
-    return render_template("oldhomepage.html", title="test tempkate", css_file='homepage.css')
-
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
