@@ -1,0 +1,139 @@
+body {
+    font-family: 'Poppins', sans-serif; /* Changer la police pour quelque chose de plus moderne */
+    background-color: #f8f9fa; /* Arrière-plan léger */
+    color: #343a40; /* Couleur de texte sombre pour un bon contraste */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    text-align: center; /* Centrer le texte dans les conteneurs */
+}
+
+.btn {
+    font-size: 1.2em; /* Augmenter la taille de la police des boutons */
+    padding: 10px 20px;
+    border-radius: 50px; /* Boutons arrondis */
+    transition: background-color 0.3s ease; /* Transition douce pour les changements de couleur */
+}
+
+.btn:hover {
+    background-color: #6c757d; /* Couleur de fond survolée */
+    color: #fff; /* Couleur de texte survolée */
+}
+
+.podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 520px;
+    margin: 40px 0;
+}
+
+.position {
+    width: 250px;
+    margin: 0 20px;
+    background-color: #f0f0f0;
+    border-radius: 10px 10px 0 0;
+    padding: 20px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajouter des ombres */
+    transition: transform 0.3s ease; /* Transition douce pour l'effet de survol */
+}
+
+.position:hover {
+    transform: translateY(-10px); /* Légère élévation au survol */
+}
+
+.first {
+    height: 400px;
+    background-color: gold;
+}
+
+.second {
+    height: 300px;
+    background-color: silver;
+}
+
+.third {
+    height: 200px;
+    background-color: #cd7f32;
+}
+
+h1 {
+    font-size: 2.5em; /* Augmenter la taille de la police pour les titres */
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 20px 0 0;
+}
+
+p {
+    margin: 5px 0 0;
+    font-size: 1.2em; /* Augmenter la taille de la police pour les paragraphes */
+}
+
+.team-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: absolute;
+    top: -150px; /* Positionner l'image au-dessus du podium */
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid #fff; /* Bordure blanche autour de l'image */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ajouter des ombres */
+}
+
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse; /* Enlever les espaces entre les cellules */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ajouter des ombres */
+}
+
+.table th, .table td {
+    padding: 15px;
+    border: 1px solid #dee2e6; /* Ajouter des bordures */
+}
+
+.table th {
+    background-color: #f8f9fa; /* Couleur de fond des en-têtes */
+    font-weight: 700; /* Police en gras */
+}
+
+.table td.gold {
+    font-weight: bold;
+    color: gold;
+}
+
+.table td.silver {
+    color: #C0C0C0;
+}
+
+.featurette-divider {
+    margin: 40px 0;
+    border-top: 2px solid #dee2e6; /* Ligne de séparation plus épaisse */
+}
+
+/* Ajouter des effets de survol pour les lignes du tableau */
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+@media (max-width: 768px) {
+    .podium {
+        flex-direction: column;
+        align-items: center;
+        height: auto;
+    }
+
+    .position {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+}
