@@ -22,33 +22,54 @@ login_manager.login_message_category = 'info'
 
 
 class User(UserMixin):
-    def __init__(self, id, first_name, last_name, email, password, promotion_id=None, phone=None, address=None, company=None, twitter=None, instagram=None, facebook=None, github=None, promotion_name=None, promotion_year=None):
+    def __init__(self, id, first_name, last_name, email, password, promotion_id=None):
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.password = password
         self.promotion_id = promotion_id
-        self.phone = phone
-        self.address = address
-        self.company = company
-        self.twitter = twitter
-        self.instagram = instagram
-        self.facebook = facebook
-        self.github = github
-        self.promotion_name = promotion_name
-        self.promotion_year = promotion_year
 
 
 @login_manager.user_loader
 def load_user(user_id):
     cur = mysql.connection.cursor()
-    cur.execute("SELECT u.*, p.name, p.year FROM Users u LEFT JOIN Promotions p ON u.promotion_id = p.promotion_id WHERE u.user_id = %s", (user_id,))
+    cur.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
     user = cur.fetchone()
     cur.close()
     if user:
         return User(user[0], user[1], user[2], user[3], user[4], user[5])
     return None
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('homepage'))
+
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        first_name = form.first_name.data.strip().title()
+        last_name = form.last_name.data.strip().title()
+        email = form.email.data.strip()
+        hashed_password = bcrypt.generate_password_hash(
+            form.password.data).decode('utf-8')
+
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO Users (first_name, last_name, email, password) VALUES (%s, %s, %s, %s)",
+                        (first_name, last_name, email, hashed_password))
+            mysql.connection.commit()
+            cur.close()
+            flash(
+                'Votre compte a été créé avec succès! Vous pouvez maintenant vous connecter.', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f'Erreur lors de la création de votre compte: {e}', 'danger')
+            mysql.connection.rollback()
+
+    return render_template('register.html', title='Inscription', css_file='register.css', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -60,42 +81,24 @@ def login():
         email = form.email.data
         password = form.password.data
         cur = mysql.connection.cursor()
-        cur.execute("SELECT u.*, p.name, p.year FROM Users u LEFT JOIN Promotions p ON u.promotion_id = p.promotion_id WHERE u.email = %s", [email])
+        cur.execute("SELECT * FROM Users WHERE email = %s", [email])
         user = cur.fetchone()
         cur.close()
         if user and bcrypt.check_password_hash(user[4], password):
-            user_obj = User(id=user[0], first_name=user[1], last_name=user[2], email=user[3], password=user[4], promotion_id=user[5])
+            user_obj = User(id=user[0], first_name=user[1],
+                            last_name=user[2], email=user[3], password=user[4], promotion_id=user[5])
             login_user(user_obj)
-            flash('Logged in successfully.', 'success')
+            flash('Connexion réussie!', 'success')
             return redirect(url_for('account'))
         else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', title='Login', css_file='login.css', form=form)
-
+            flash('Erreur de connexion. Veuillez vérifier votre email et mot de passe.', 'danger')
+    return render_template('login.html', title='Connexion', css_file='login.css', form=form)
 
 
 @app.route('/')
 @app.route('/home')
 def homepage():
     return render_template('homepage.html', title='Homepage', css_file='homepage.css')
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('homepage'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(
-            form.password.data).decode('utf-8')
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO Users (first_name, last_name, email, password) VALUES (%s, %s, %s, %s)",
-                    (form.first_name.data, form.last_name.data, form.email.data, hashed_password))
-        mysql.connection.commit()
-        cur.close()
-        flash('Your account has been created! You are now able to log in', 'success')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', css_file='register.css', form=form)
 
 
 @app.route('/account')
