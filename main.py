@@ -249,12 +249,7 @@ def logout():
 
 @app.route('/awards')
 def awards():
-    return render_template("awards.html", title="Awards", css_file='awards.css')
-
-@app.route('/awards23')
-def awards23():
     cur = mysql.connection.cursor()
-
     cur.execute("""
         SELECT a.nomAward, u.first_name, u.last_name, a.idAward, p.name
         FROM Awards a 
@@ -263,9 +258,28 @@ def awards23():
     """)
     awards = cur.fetchall()
 
-   
+    cur.execute("""
+        SELECT a.nomAward, u.first_name, u.last_name, a.idAward, p.name
+        FROM Awards21 a 
+        INNER JOIN Users u ON a.idGagnant = u.user_id INNER JOIN Promotions p ON p.promotion_id = u.promotion_id
+        WHERE a.idEvenement = 2
+        
+    """)
+    awards21 = cur.fetchall()
+    
 
-    return render_template("awards23.html", title="Awards 2023", css_file='awards23.css', awards=awards)
+    cur.execute("""
+        SELECT a.nomAward, u.first_name, u.last_name, a.idAward, p.name
+        FROM Awards22 a 
+        INNER JOIN Users u ON a.idGagnant = u.user_id INNER JOIN Promotions p ON p.promotion_id = u.promotion_id
+        WHERE a.idEvenement = 3
+        
+    """)
+    awards22 = cur.fetchall()
+    
+    cur.close()
+    return render_template("awards.html", title="Awards", css_file='awards.css', awards=awards, awards21=awards21, awards22=awards22)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
