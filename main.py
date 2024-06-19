@@ -340,11 +340,6 @@ def awards23():
     return render_template("awards23.html", title="Awards 2023", css_file='awards23.css')
 
 
-@app.route('/index')
-@login_required
-def index():
-    return render_template("index.html", title="test tempkate", css_file='carousel.css')
-
 @app.route('/results')
 @login_required
 def results():
