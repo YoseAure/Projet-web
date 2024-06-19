@@ -4,7 +4,8 @@
 
 <body>
     {% include 'navbar.html' %}
-    <button class="btn btn-outline-secondary toggle-sidebar-btn ms-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#promolist" aria-controls="promolist">
+    <button class="btn btn-outline-secondary toggle-sidebar-btn ms-3" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#promolist" aria-controls="promolist">
         <i class="fa fa-arrow-right"></i>
     </button>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
@@ -14,28 +15,31 @@
                 aria-labelledby="offcanvasWithBothOptionsLabel">
                 <div class="offcanvas-header">
                     <a href="{{ url_for('account') }}">
-                        <img src="{{ url_for('static', filename='images/avatar-homme.png') }}" alt="user" class="rounded-circle"
-                            width="30">
+                        <img src="{{ url_for('static', filename='images/avatar-homme.png') }}" alt="user"
+                            class="rounded-circle" width="30">
                     </a>
+                    <p class="text-secondary ms-2 mb-0">{{ current_user.first_name }} {{ current_user.last_name }}</p>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <ul class="list-group w-100">
-                        {% for promo in promotions %}
-                        <button class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
-                            {{ promo.name }}
-                            <span class="badge text-bg-secondary rounded-pill">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill"
-                                    viewBox="0 0 16 16">
-                                    <path
-                                        d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-                                </svg>
-                                {{ promo.user_count }}
-                            </span>
-                            <!-- <span class="badge text-bg-secondary rounded-pill">{{ promo.year }}</span> -->
-                        </button>
-                        {% endfor %}
-                    </ul>
+                    <form method="POST" action="{{ url_for('promotions') }}">
+                        <ul class="list-group w-100">
+                            {% for promo in promotions %}
+                            <button type="submit" name="promotion_id" value="{{ promo[0] }}"
+                                class="list-group-item d-flex justify-content-between align-items-center list-group-item-action">
+                                {{ promo[2] }}
+                                <span class="badge text-bg-secondary rounded-pill">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-people-fill" viewBox="0 0 16 16">
+                                        <path
+                                            d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
+                                    </svg>
+                                    {{ promo[3] }}
+                                </span>
+                            </button>
+                            {% endfor %}
+                        </ul>
+                    </form>
                 </div>
             </div>
             <div class="col-md-12" id="content">
@@ -49,104 +53,41 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="single_advisor_profile wow fadeInUp" data-wow-delay="0.2s"
-                                style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                                <div class="advisor_thumb">
-                                    <img src="{{ url_for('static', filename='images/avatar-homme.png')}}" alt>
-                                    <div class="social-info">
-                                        <a href="#"><i class="fa fa-facebook"></i></a>
-                                        <a href="#"><i class="fa fa-twitter"></i></a>
-                                        <a href="#"><i class="fa fa-linkedin"></i></a>
+                        {% if users %}
+                        {% for user in users %}
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
+                            <a href="{{ url_for('account', user_id=user[0]) }}" class="text-decoration-none">
+                                <div class="single_advisor_profile wow fadeInUp user-card" data-wow-delay="0.2s"
+                                    style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                                    <div class="advisor_thumb">
+                                        <img src="{{ url_for('static', filename='images/avatar-homme.png')}}" alt="Avatar">
+                                        <div class="social-info">
+                                            <a href="#"><i class="fa fa-facebook"></i></a>
+                                            <a href="#"><i class="fa fa-twitter"></i></a>
+                                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="single_advisor_details_info">
+                                        <h6 class="user-name">{{ user[1] }} {{ user[2] }}</h6>
                                     </div>
                                 </div>
-                                <div class="single_advisor_details_info">
-                                    <h6>Aurélien Collet</h6>
-                                    <p class="designation">Founder &amp; CEO</p>
-                                </div>
-                            </div>
+                            </a>
                         </div>
-
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="single_advisor_profile wow fadeInUp" data-wow-delay="0.3s"
-                                style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
-                                <div class="advisor_thumb">
-                                    <img src="{{ url_for('static', filename='images/avatar-homme.png')}}" alt>
-                                    <div class="social-info">
-                                        <a href="#"><i class="fa fa-facebook"></i></a>
-                                        <a href="#"><i class="fa fa-twitter"></i></a>
-                                        <a href="#"><i class="fa fa-linkedin"></i></a>
-                                    </div>
-                                </div>
-                                <div class="single_advisor_details_info">
-                                    <h6>Alan Huguel</h6>
-                                    <p class="designation">UI Designer</p>
-                                </div>
-                            </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="col-12">
+                            <p class="position-absolute top-50 start-50 translate-middle text-center">Aucun utilisateur
+                                n'est inscrit dans cette promotion</p>
                         </div>
-
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="single_advisor_profile wow fadeInUp" data-wow-delay="0.4s"
-                                style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
-                                <div class="advisor_thumb">
-                                    <img src="{{ url_for('static', filename='images/avatar-homme.png')}}" alt>
-                                    <div class="social-info">
-                                        <a href="#"><i class="fa fa-facebook"></i></a>
-                                        <a href="#"><i class="fa fa-twitter"></i></a>
-                                        <a href="#"><i class="fa fa-linkedin"></i></a>
-                                    </div>
-                                </div>
-                                <div class="single_advisor_details_info">
-                                    <h6>Baptiste Skibiak</h6>
-                                    <p class="designation">Developer</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="single_advisor_profile wow fadeInUp" data-wow-delay="0.5s"
-                                style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
-                                <div class="advisor_thumb">
-                                    <img src="{{ url_for('static', filename='images/avatar-homme.png')}}" alt>
-                                    <div class="social-info">
-                                        <a href="#"><i class="fa fa-facebook"></i></a>
-                                        <a href="#"><i class="fa fa-twitter"></i></a>
-                                        <a href="#"><i class="fa fa-linkedin"></i></a>
-                                    </div>
-                                </div>
-                                <div class="single_advisor_details_info">
-                                    <h6>Baptiste Pouliquen</h6>
-                                    <p class="designation">Marketing Manager</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <div class="single_advisor_profile wow fadeInUp" data-wow-delay="0.5s"
-                                style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
-                                <div class="advisor_thumb">
-                                    <img src="{{ url_for('static', filename='images/avatar-homme.png')}}" alt>
-                                    <div class="social-info">
-                                        <a href="#"><i class="fa fa-facebook"></i></a>
-                                        <a href="#"><i class="fa fa-twitter"></i></a>
-                                        <a href="#"><i class="fa fa-linkedin"></i></a>
-                                    </div>
-                                </div>
-                                <div class="single_advisor_details_info">
-                                    <h6>Baptiste Pouliquen</h6>
-                                    <p class="designation">Marketing Manager</p>
-                                </div>
-                            </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
     {% include 'footer.html' %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
 </body>
 
 </html>

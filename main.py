@@ -68,20 +68,27 @@ def homepage():
     return render_template('homepage.html', title='Homepage', css_file='homepage.css')
 
 
-@app.route('/account')
+@app.route('/account', defaults={'user_id': None})
+@app.route('/account/<int:user_id>')
 @login_required
-def account():
+def account(user_id):
+    # Si aucun user_id n'est fourni, afficher le profil de l'utilisateur actuel
+    if user_id is None:
+        user_id = current_user.id
+
+    # Obtenir les détails de l'utilisateur à afficher
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Users WHERE user_id = %s", (current_user.id,))
+    cur.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
     user = cur.fetchone()
-    prenom = user[1]
-    nom = user[2]
-    email = user[3]
+    if not user:
+        flash('User not found.', 'danger')
+        return redirect(url_for('promotions'))
+
+    prenom, nom, email = user[1], user[2], user[3]
     cur.close()
 
     cur = mysql.connection.cursor()
-    cur.execute(
-        "SELECT * FROM UserDetails WHERE user_id = %s", (current_user.id,))
+    cur.execute("SELECT * FROM UserDetails WHERE user_id = %s", (user_id,))
     details = cur.fetchone()
     phone = details[1] if details and details[1] else ''
     address = details[2] if details and details[2] else ''
@@ -192,19 +199,53 @@ def edit_profile():
     return render_template('edit-profile.html', title='Edit Profile', css_file='edit-profile.css', form=form)
 
 
-@app.route('/promotions')
+@app.route('/promotions', methods=['GET', 'POST'])
 @login_required
 def promotions():
-    promotions = Promotion.get_all_promotions(mysql)
     cur = mysql.connection.cursor()
-    cur.execute("SELECT p.name, p.year FROM Promotions p JOIN Users u ON u.promotion_id = p.promotion_id WHERE u.user_id = %s", (current_user.id,))
-    promotion = cur.fetchone()
+
+    # Récupération de toutes les promotions
+    cur.execute("""
+        SELECT p.promotion_id, p.year, p.name, COUNT(u.user_id) as user_count
+        FROM Promotions p
+        LEFT JOIN Users u ON p.promotion_id = u.promotion_id
+        GROUP BY p.promotion_id, p.year, p.name
+        ORDER BY p.year DESC""")
+    promotions = cur.fetchall()
+
+    cur.execute("SELECT p.name FROM Promotions p JOIN Users u ON u.promotion_id = p.promotion_id WHERE u.user_id = %s", (current_user.id,))
+    promotion_name = cur.fetchone()[0]
+    cur.execute("SELECT u.user_id, u.first_name, u.last_name FROM Users u WHERE u.promotion_id = %s", (current_user.promotion_id,))
+    users = []
+    users = cur.fetchall()
+
+
+    selected_promotion_id = request.form.get('promotion_id')
+    if selected_promotion_id:
+        cur.execute("SELECT u.user_id, u.first_name, u.last_name FROM Users u WHERE u.promotion_id = %s", (selected_promotion_id,))
+        users = cur.fetchall()
+        cur.execute("SELECT name FROM Promotions WHERE promotion_id = %s", (selected_promotion_id,))
+        promotion_name = cur.fetchone()[0]
+
     cur.close()
 
-    promotion_name = promotion[0] if promotion else "No promotion assigned"
-    promotion_year = promotion[1] if promotion else "N/A"
+    return render_template('promotions.html', title='Promotions', css_file='promotions.css',
+                           promotions=promotions, promotion_name=promotion_name, users=users)
 
-    return render_template('promotions.html', title='Promotions', css_file='promotions.css', promotions=promotions, promotion_name=promotion_name, promotion_year=promotion_year)
+
+# @app.route('/promotions')
+# @login_required
+# def promotions():
+#     promotions = Promotion.get_all_promotions(mysql)
+#     cur = mysql.connection.cursor()
+#     cur.execute("SELECT p.name, p.year FROM Promotions p JOIN Users u ON u.promotion_id = p.promotion_id WHERE u.user_id = %s", (current_user.id,))
+#     promotion = cur.fetchone()
+#     cur.close()
+
+#     promotion_name = promotion[0] if promotion else "No promotion assigned"
+#     promotion_year = promotion[1] if promotion else "N/A"
+
+#     return render_template('promotions.html', title='Promotions', css_file='promotions.css', promotions=promotions, promotion_name=promotion_name, promotion_year=promotion_year)
 
 
 @app.route('/olympiades')
@@ -233,29 +274,6 @@ def unfollow_user(user_id):
     mysql.connection.commit()
     cur.close()
     return redirect(url_for('profile', user_id=user_id))
-
-
-@app.route('/profile/<int:user_id>')
-@login_required
-def profile(user_id):
-    cur = mysql.connection.cursor()
-
-    cur.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
-    user = cur.fetchone()
-
-    cur.execute("SELECT Users.user_id, Users.prenom, Users.nom FROM UserFollowers "
-                "JOIN Users ON UserFollowers.followed_id = Users.user_id "
-                "WHERE UserFollowers.follower_id = %s", (user_id,))
-    following = cur.fetchall()
-
-    cur.execute("SELECT Users.user_id, Users.prenom, Users.nom FROM UserFollowers "
-                "JOIN Users ON UserFollowers.follower_id = Users.user_id "
-                "WHERE UserFollowers.followed_id = %s", (user_id,))
-    followers = cur.fetchall()
-
-    cur.close()
-
-    return render_template('profile.html', user=user, following=following, followers=followers)
 
 
 @app.route('/send_message', methods=['POST'])
