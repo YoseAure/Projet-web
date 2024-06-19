@@ -1,45 +1,8 @@
-from flask import Flask, render_template, url_for, flash, redirect, request
-from flask_mysqldb import MySQL
-from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, UserMixin, login_user, current_user, logout_user, login_required
+from flask import render_template, url_for, flash, redirect, request
+from flask_login import login_user, current_user, logout_user, login_required
 from forms import RegistrationForm, LoginForm, EditProfileForm
-from werkzeug.security import check_password_hash
-import os
-from models import Promotion
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
-app.config['MYSQL_HOST'] = os.getenv('DB_HOST', 'enac.darties.fr')
-app.config['MYSQL_USER'] = os.getenv('DB_USER', 'aurelien.collet')
-app.config['MYSQL_PASSWORD'] = os.getenv('DB_PASSWORD', 'u27dPvXHAzeUPzp4')
-app.config['MYSQL_DB'] = os.getenv('DB_NAME', 'les_apprentis')
-
-mysql = MySQL(app)
-bcrypt = Bcrypt(app)
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
-login_manager.login_message_category = 'info'
-
-
-class User(UserMixin):
-    def __init__(self, id, first_name, last_name, email, password, promotion_id=None):
-        self.id = id
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.password = password
-        self.promotion_id = promotion_id
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM Users WHERE user_id = %s", (user_id,))
-    user = cur.fetchone()
-    cur.close()
-    if user:
-        return User(user[0], user[1], user[2], user[3], user[4], user[5])
-    return None
+from models import User, load_user, get_all_promotions
+from config import app, mysql, bcrypt, login_manager
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -48,28 +11,32 @@ def register():
         return redirect(url_for('homepage'))
 
     form = RegistrationForm()
+    promotions = get_all_promotions()
+    print(promotions)
 
     if form.validate_on_submit():
         first_name = form.first_name.data.strip().title()
         last_name = form.last_name.data.strip().title()
         email = form.email.data.strip()
-        hashed_password = bcrypt.generate_password_hash(
-            form.password.data).decode('utf-8')
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        promotion_id = int(request.form.get('annee'))
+        print(promotion_id)
+        print(type(promotion_id))
 
         try:
             cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO Users (first_name, last_name, email, password) VALUES (%s, %s, %s, %s)",
-                        (first_name, last_name, email, hashed_password))
+            cur.execute("INSERT INTO Users (first_name, last_name, email, password, promotion_id) VALUES (%s, %s, %s, %s, %s)",
+                        (first_name, last_name, email, hashed_password, promotion_id))
             mysql.connection.commit()
             cur.close()
-            flash(
-                'Votre compte a été créé avec succès! Vous pouvez maintenant vous connecter.', 'success')
+            flash('Votre compte a été créé avec succès! Vous pouvez maintenant vous connecter.', 'success')
             return redirect(url_for('login'))
         except Exception as e:
+            print('ici')
             flash(f'Erreur lors de la création de votre compte: {e}', 'danger')
             mysql.connection.rollback()
 
-    return render_template('register.html', title='Inscription', css_file='register.css', form=form)
+    return render_template('register.html', title='Inscription', css_file='register.css', form=form, promotions=promotions)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -128,22 +95,25 @@ def account():
     github = details[10] if details and details[10] else ''
     cur.close()
 
+    is_current_user = (user_id == current_user.id)
+
     return render_template('account.html',
-                            title='Account Profile',
-                            css_file='account.css',
-                            nom=nom,
-                            prenom=prenom,
-                            email=email,
-                            phone=phone,
-                            address=address,
-                            ville=ville,
-                            code_postal=code_postal,
-                            pays=pays,
-                            company=company,
-                            twitter=twitter,
-                            instagram=instagram,
-                            facebook=facebook,
-                            github=github)
+                           title='Account Profile',
+                           css_file='account.css',
+                           nom=nom,
+                           prenom=prenom,
+                           email=email,
+                           phone=phone,
+                           address=address,
+                           ville=ville,
+                           code_postal=code_postal,
+                           pays=pays,
+                           company=company,
+                           twitter=twitter,
+                           instagram=instagram,
+                           facebook=facebook,
+                           github=github,
+                           is_current_user=is_current_user)
 
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
@@ -294,7 +264,7 @@ def old_messages():
     return render_template('old-messages.html', css_file="messages.css", title='old messages')
 
 
-@app.route('/messages')
+@app.route('/messages', methods=['GET', 'POST'])
 @login_required
 def messages():
     user_id = current_user.id
@@ -339,7 +309,6 @@ def messages():
         other_user=other_user,
         css_file='messages.css'
     )
-
 
 
 @app.route('/logout')

@@ -28,16 +28,11 @@
                                         <label for="annee" class="form-label">Sélectionnez votre promotion :</label>
                                         <select name="annee" class="form-select" id="annee" required>
                                             <option value="" disabled selected>-</option>
+                                            {% for promotion_id, name in promotions %}
+                                            <option value="{{ promotion_id }}">{{ name }}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
-                                    <script>
-                                        var select = document.getElementById("annee");
-                                        var currentYear = new Date().getFullYear();
-                                        for (var year = 2013; year <= currentYear; year++) {
-                                            var optionValue = "IENAC" + year.toString().slice(-2) + "_APPR";
-                                            select.add(new Option(optionValue, optionValue));
-                                        }
-                                    </script>
 
                                     <div class="mb-3">
                                         <label for="email" class="form-label">Adresse mail</label>
