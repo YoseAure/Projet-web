@@ -12,16 +12,17 @@ def register():
 
     form = RegistrationForm()
     promotions = get_all_promotions()
-    print(promotions)
-
     if form.validate_on_submit():
         first_name = form.first_name.data.strip().title()
         last_name = form.last_name.data.strip().title()
         email = form.email.data.strip()
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         promotion_id = int(request.form.get('annee'))
-        print(promotion_id)
-        print(type(promotion_id))
+
+        if not email.endswith('@alumni.enac.fr'):
+            flash("L'adresse e-mail doit se terminer par '@alumni.enac.fr'.", 'danger')
+            print('ici')
+            return render_template('register.html', title='Inscription', css_file='register.css', form=form, promotions=promotions)
 
         try:
             cur = mysql.connection.cursor()
@@ -29,10 +30,10 @@ def register():
                         (first_name, last_name, email, hashed_password, promotion_id))
             mysql.connection.commit()
             cur.close()
-            flash('Votre compte a été créé avec succès! Vous pouvez maintenant vous connecter.', 'success')
+            flash(
+                'Votre compte a été créé avec succès! Vous pouvez maintenant vous connecter.', 'success')
             return redirect(url_for('login'))
         except Exception as e:
-            print('ici')
             flash(f'Erreur lors de la création de votre compte: {e}', 'danger')
             mysql.connection.rollback()
 
@@ -86,6 +87,11 @@ def account(user_id):
     cur.close()
 
     cur = mysql.connection.cursor()
+    cur.execute("SELECT p.name FROM Promotions p JOIN Users u ON u.promotion_id = p.promotion_id WHERE u.user_id = %s", (user_id,))
+    promotion = cur.fetchone()[0]
+    cur.close()
+
+    cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM UserDetails WHERE user_id = %s", (user_id,))
     details = cur.fetchone()
     phone = details[1] if details and details[1] else ''
@@ -103,22 +109,23 @@ def account(user_id):
     is_current_user = (user_id == current_user.id)
 
     return render_template('account.html',
-                           title='Account Profile',
-                           css_file='account.css',
-                           nom=nom,
-                           prenom=prenom,
-                           email=email,
-                           phone=phone,
-                           address=address,
-                           ville=ville,
-                           code_postal=code_postal,
-                           pays=pays,
-                           company=company,
-                           twitter=twitter,
-                           instagram=instagram,
-                           facebook=facebook,
-                           github=github,
-                           is_current_user=is_current_user)
+                            title='Account Profile',
+                            css_file='account.css',
+                            nom=nom,
+                            prenom=prenom,
+                            promotion=promotion,
+                            email=email,
+                            phone=phone,
+                            address=address,
+                            ville=ville,
+                            code_postal=code_postal,
+                            pays=pays,
+                            company=company,
+                            twitter=twitter,
+                            instagram=instagram,
+                            facebook=facebook,
+                            github=github,
+                            is_current_user=is_current_user)
 
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
@@ -273,12 +280,6 @@ def send_message():
         cur.close()
 
     return redirect(url_for('messages', user_id=receiver_id))
-
-
-@app.route('/old-messages')
-@login_required
-def old_messages():
-    return render_template('old-messages.html', css_file="messages.css", title='old messages')
 
 
 @app.route('/messages', methods=['GET', 'POST'])

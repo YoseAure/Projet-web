@@ -11,6 +11,10 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirmer mot de passe', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Créer mon compte')
 
+    def validate_email(self, email):
+        domain = "@alumni.enac.fr"
+        if not email.data.endswith(domain):
+            raise ValidationError(f'L\'email doit se terminer par {domain}.')
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
